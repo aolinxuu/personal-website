@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  justify-content: space-around;
+  padding: 130px 100px;
+}
+
+.memoji {
+  width: 305px;
+  height: 360px;
+  padding-right: 80px;
+}
+
+.heading {
+  font-size: 40px;
+  font-weight: 700;
+  color: black;
+  padding-right: 90px;
+  margin-top: 80px;
+  margin-bottom: 80px;
+}
+
+.links {
+  display: flex;
+  flex-direction: column;
+}
+
+.links a {
+  font-size: 16px;
+  text-decoration: none;
+  color: blue;
+  margin: 7px 0;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}

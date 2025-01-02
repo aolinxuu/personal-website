@@ -1,0 +1,25 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 35px;
+  background-color: white;
+}
+
+.navbar-title {
+  font-weight: 400;
+}
+
+.navbar-pages a {
+  font-weight: 100;
+  text-decoration: none;
+  margin-right: 35px;
+  color: black;
+  transition: font-weight 0.3s ease;
+}
+
+.navbar-pages a:hover,
+.navbar-pages a.active {
+  font-weight: 600;
+  color: #000;
+}
