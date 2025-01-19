@@ -1,27 +1,30 @@
 .container {
   display: flex;
   justify-content: space-around;
-  padding: 130px 100px;
+  padding: 170px 100px;
 }
 
 .memoji {
   width: 305px;
   height: 360px;
-  padding-right: 80px;
+  padding-right: 90px;
+  padding-top: 40px;
 }
 
 .heading {
   font-size: 40px;
   font-weight: 700;
   color: black;
-  padding-right: 90px;
-  margin-top: 80px;
+  padding-right: 80px;
+  padding-left: 50px;
+  margin-top: 120px;
   margin-bottom: 80px;
 }
 
 .links {
   display: flex;
   flex-direction: column;
+  padding-left: 50px;
 }
 
 .links a {
