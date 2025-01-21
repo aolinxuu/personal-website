@@ -1,28 +1,28 @@
 .work-container {
   display: flex;
   flex-direction: column;
-  padding: 170px 100px;
+  padding: 150px 100px;
 }
-.projects-title {
+.work-title {
   font-size: 30px;
   font-weight: 100;
+  padding-left: 30px;
+  padding-top: 40px;
+  padding-bottom: 40px;
 }
 .projects-container {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  position: relative;
-  padding: 170px 100px;
 }
 .project-card {
-  width: 300px;
-  height: 200px;
+  width: 350px;
+  height: 250px;
   background-color: #e8f9fd;
   border-radius: 10px;
-  padding: 20px;
   text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 10px;
+  margin: 20px;
 }
 
 .project-image {
