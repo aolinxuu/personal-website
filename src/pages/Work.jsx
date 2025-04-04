@@ -7,54 +7,35 @@ const Work = () => {
       <div className="work-title">Technical Stuff</div>
       <div className="projects-container">
         <div className="project-row">
-          <div className="project-card openai-card">
-            <p>OpenAI</p>
+          <div className="project-card study-timer-card">
+            <p>LockIn - Study Timer</p>
           </div>
           <div className="project-description">
-            <h3>OpenAI</h3>
+            <p>
+              A simple cross-platform study timer with button controls that plays audio cues at key intervals, changes
+              colors based on progress to help you stay focused.
+            </p>
+            <div className="tags-container">
+              <div className="tag">Python</div>
+              <div className="tag">React</div>
+              <div className="tag">JavaScript</div>
+            </div>
+          </div>
+        </div>
+        <div className="project-row">
+          <div className="project-card company-card">
+            <p>Company Recommendation System</p>
+          </div>
+          <div className="project-description">
             <p>
               Description of your work at OpenAI goes here. You can include details about your role, projects, and
               achievements.
             </p>
-          </div>
-        </div>
-
-        <div className="project-row">
-          <div className="project-card royal-hospital-card">
-            <p>The Royal Hospital for Women</p>
-          </div>
-          <div className="project-description">
-            <h3>The Royal Hospital for Women</h3>
-            <p>
-              Description of your work at The Royal Hospital for Women goes here. You can include details about your
-              role, projects, and achievements.
-            </p>
-          </div>
-        </div>
-
-        <div className="project-row">
-          <div className="project-card milkguard-card">
-            <p>MilkGuard</p>
-          </div>
-          <div className="project-description">
-            <h3>MilkGuard</h3>
-            <p>
-              Description of your work on MilkGuard goes here. You can include details about your role, projects, and
-              achievements.
-            </p>
-          </div>
-        </div>
-
-        <div className="project-row">
-          <div className="project-card personal-website-card">
-            <p>Personal Website</p>
-          </div>
-          <div className="project-description">
-            <h3>Personal Website</h3>
-            <p>
-              Description of your personal website project goes here. You can include details about the technologies
-              used and features implemented.
-            </p>
+            <div className="tags-container">
+              <div className="tag">Python</div>
+              <div className="tag">Machine Learning</div>
+              <div className="tag">Data Analysis</div>
+            </div>
           </div>
         </div>
       </div>
