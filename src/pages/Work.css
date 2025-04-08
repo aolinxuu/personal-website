@@ -1,60 +1,75 @@
+/* Main Container Styles */
 .work-container {
   display: flex;
   flex-direction: column;
-  padding: 140px 100px;
-}
-.work-title {
-  font-size: 35px;
-  font-weight: 100;
-  padding-left: 30px;
-  padding-top: 20px;
-  padding-bottom: 40px;
+  padding: clamp(80px, 10vw, 140px) clamp(40px, 8vw, 100px);
 }
 
+/* Title Styles */
+.work-title {
+  font-size: clamp(28px, 3vw, 35px);
+  font-weight: 100;
+  padding: clamp(15px, 2vw, 20px) 0 clamp(30px, 3vw, 40px) clamp(50px, 8vw, 100px);
+}
+
+/* Projects Container Layout */
 .projects-container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding-left: 50px;
+  gap: clamp(20px, 3vw, 40px);
+  padding-left: clamp(20px, 4vw, 50px);
 }
 
+/* Project Row Layout */
 .project-row {
   display: flex;
   padding: 1px 10px;
   align-items: center;
+  padding-left: clamp(50px, 15vw, 150px);
 }
 
+/* Project Card Base Styles */
 .project-card {
-  width: 400px;
-  height: 190px;
+  width: clamp(300px, 30vw, 400px);
+  min-height: auto;
   border-radius: 20px;
   text-align: left;
   flex-direction: column;
   justify-content: flex-start;
   align-items: flex-start;
-  padding: 0px 25px;
-  font-size: 30px;
+  padding: clamp(15px, 2vw, 25px);
+  font-size: clamp(24px, 3vw, 30px);
   font-weight: 100;
+  position: relative;
+  display: flex;
 }
 
+.project-card p {
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+/* Project Description Styles */
 .project-description {
   flex: 1;
-  padding: 50px 80px;
-  font-size: 17px;
-  font-weight: 100;
+  padding: clamp(30px, 4vw, 50px) clamp(40px, 6vw, 80px);
+  padding-right: clamp(100px, 20vw, 300px);
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 200;
 }
 
 .project-description p {
   line-height: 1.6;
-  color: #333;
+  color: black;
   margin-bottom: 20px;
 }
 
+/* Tags Container and Tag Styles */
 .tags-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 9px;
+  margin-bottom: 10px;
 }
 
 .tag {
@@ -63,10 +78,10 @@
   border-radius: 15px;
   font-size: 14px;
   color: #333;
-  font-weight: 400;
+  font-weight: 300;
 }
 
-/* Individual card colors */
+/* Individual Project Card Colors */
 .study-timer-card {
   background-color: #e8f9fd;
 }
@@ -75,11 +90,91 @@
   background-color: #fde8e8;
 }
 
-@media (max-width: 768px) {
-  .work-container {
-    padding: 100px 20px;
+/* Links Container and Link Styles */
+.links-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  margin-top: 9px;
+  font-size: clamp(10px, 2vw, 14px);
+  font-weight: 300;
+}
+
+.github-link a,
+.download-link a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.github-link a:hover,
+.download-link a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .project-card {
+    width: clamp(280px, 25vw, 350px);
   }
+}
+
+@media (max-width: 1000px) {
+  .project-card {
+    width: clamp(250px, 20vw, 300px);
+  }
+}
+
+@media (max-width: 1000px) {
+  /* Container Adjustments */
+  .work-container {
+    padding: clamp(60px, 8vw, 100px) clamp(20px, 4vw, 40px);
+  }
+
+  /* Project Row Adjustments */
+  .project-row {
+    flex-direction: column;
+    padding-left: 0;
+    gap: clamp(15px, 2vw, 20px);
+  }
+
+  /* Project Card Adjustments */
   .project-card {
     width: 100%;
+    min-height: auto;
+    padding: clamp(15px, 2vw, 20px);
+  }
+
+  /* Description Adjustments */
+  .project-description {
+    padding: clamp(15px, 2vw, 20px);
+    padding-right: clamp(15px, 2vw, 20px);
+  }
+
+  /* Tags and Link Adjustments */
+  .tags-container {
+    position: static;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .github-link,
+  .download-link {
+    position: static;
+    margin-top: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  /* Tags and Link Adjustments */
+  .links-container {
+    position: static;
+    margin-top: 20px;
+  }
+
+  .github-link,
+  .download-link {
+    position: static;
+    margin-top: 10px;
   }
 }
