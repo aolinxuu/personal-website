@@ -12,14 +12,36 @@
 }
 
 .heading {
-  font-size: 45px;
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  min-height: 3.5rem;
   font-weight: 700;
   letter-spacing: 4px;
   color: black;
   padding-right: 80px;
   padding-left: 60px;
   margin-top: 120px;
-  margin-bottom: 80px;
+}
+
+.cursor {
+  display: inline-block;
+  width: 4px;
+  height: 1em;
+  background-color: #d973b0;
+  margin-left: 1px;
+  animation: blink 0.9s step-end infinite;
+  vertical-align: baseline;
+  margin-bottom: -0.1em;
+}
+
+@keyframes blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
 }
 
 .links {
