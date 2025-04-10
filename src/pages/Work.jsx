@@ -75,8 +75,8 @@ const Work = () => {
           </div>
         </div>
       </div>
-      {/* <div className="work-title"> Collaborations</div>
-      <div className="work-title"> Workshops</div> */}
+      {/* <div className="work-title"> Semi-Technical Stuff</div> */}
+      {/* <div className="work-title"> Workshops</div>  */}
     </div>
   );
 };
