@@ -25,7 +25,7 @@
   display: flex;
   padding: 1px 10px;
   align-items: center;
-  padding-left: clamp(50px, 15vw, 150px);
+  padding-left: clamp(10px, 15vw, 10px);
 }
 
 /* Project Card Base Styles */
@@ -53,7 +53,7 @@
 .project-description {
   flex: 1;
   padding: clamp(30px, 4vw, 50px) clamp(40px, 6vw, 80px);
-  padding-right: clamp(100px, 20vw, 300px);
+  padding-right: clamp(10px, 5vw, 200px);
   font-size: clamp(16px, 2vw, 20px);
   font-weight: 200;
 }
