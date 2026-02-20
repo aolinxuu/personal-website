@@ -1,4 +1,4 @@
-.navbar {
+/* .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,4 +27,114 @@
 .navbar-pages a.active {
   font-weight: 600;
   color: #000;
+} */
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 60px;
+  transition: var(--transition);
+}
+
+.navbar--scrolled {
+  background: rgba(250, 249, 246, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 18px 60px;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* Logo */
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.navbar-logo-text {
+  font-family: "DM Serif Display", serif;
+  font-size: 22px;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  transition: var(--transition);
+}
+
+.navbar-logo:hover .navbar-logo-text {
+  color: var(--accent);
+}
+
+.navbar-logo-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  margin-bottom: 2px;
+  transition: var(--transition);
+}
+
+.navbar-logo:hover .navbar-logo-dot {
+  transform: scale(1.5);
+}
+
+/* Links */
+.navbar-links {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.navbar-link {
+  position: relative;
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 100px;
+  transition: var(--transition);
+  letter-spacing: 0.2px;
+}
+
+.navbar-link:hover {
+  color: var(--text-primary);
+  background: var(--bg-card);
+}
+
+.navbar-link--active {
+  color: var(--text-primary);
+  font-weight: 500;
+  background: var(--accent-light);
+}
+
+.navbar-link--active::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 20px 24px;
+  }
+  .navbar--scrolled {
+    padding: 14px 24px;
+  }
+  .navbar-link {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
 }

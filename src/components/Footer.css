@@ -1,17 +1,86 @@
 .footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* background-color: #f0f0f0; */
-  width: auto;
-  position: fixed;
-  left: 5%;
-  right: 5%;
-  bottom: 40px;
+  padding: 32px 60px 40px;
+  border-top: 1px solid var(--border);
+  margin-top: 80px;
 }
 
-.footerIcons {
-  width: 70px;
-  height: 70px;
-  margin: 0 5px;
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.footer-copy {
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 300;
+}
+
+.footer-email {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  position: relative;
+  transition: var(--transition);
+}
+
+.footer-email::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s ease;
+}
+
+.footer-email:hover {
+  color: var(--accent);
+}
+
+.footer-email:hover::after {
+  width: 100%;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.footer-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  transition: var(--transition);
+  opacity: 0.6;
+}
+
+.footer-icon img {
+  width: 22px;
+  height: 22px;
+}
+
+.footer-icon:hover {
+  opacity: 1;
+  background: var(--bg-card);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding: 24px;
+  }
+  .footer-inner {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
 }
