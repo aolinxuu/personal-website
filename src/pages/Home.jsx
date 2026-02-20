@@ -52,60 +52,117 @@ function useCursor() {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Magnetic element hook
+// Aurora canvas hook — Spline-style luminous orbs that chase the mouse
 // ─────────────────────────────────────────────────────────────────────────────
-function useMagnetic({ strength = 0.35, radius = 120 } = {}) {
-  const ref = useRef(null);
-  const cur = useRef({ x: 0, y: 0 });
-  const raf = useRef(null);
+// Max pixels any orb / blob is allowed to drift from its resting position
+const ORBS_MAX_DRIFT = 150;  // canvas orbs
+const BLOB_MAX_DRIFT = 100;  // CSS blobs
+
+const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+
+function useAuroraCanvas() {
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-    const onMove = (e) => {
-      const rect = el.getBoundingClientRect();
-      const cx = rect.left + rect.width  / 2;
-      const cy = rect.top  + rect.height / 2;
-      const dx = e.clientX - cx;
-      const dy = e.clientY - cy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < radius) {
-        const pull = (1 - dist / radius);
-        cur.current = { x: dx * pull * strength, y: dy * pull * strength };
-      } else {
-        cur.current = { x: 0, y: 0 };
-      }
+    const ctx = canvas.getContext("2d");
+    let animId;
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    // Each orb stores homeX/homeY so we can clamp displacement
+    const makeOrb = (hx, hy, radius, lag, offsetX, offsetY, color, opacity) => ({
+      homeX: hx, homeY: hy,
+      x: hx, y: hy,
+      tx: hx, ty: hy,
+      radius, lag, offsetX, offsetY, color, opacity,
+    });
+
+    const orbs = [
+      makeOrb(
+        window.innerWidth * 0.65, window.innerHeight * 0.25,
+        520, 0.09, 80, -60,
+        [[252, 156, 183], [210, 90, 170]], 0.55,
+      ),
+      makeOrb(
+        window.innerWidth * 0.15, window.innerHeight * 0.6,
+        440, 0.065, -120, 80,
+        [[160, 100, 240], [100, 60, 200]], 0.40,
+      ),
+      makeOrb(
+        window.innerWidth * 0.5, window.innerHeight * 0.85,
+        380, 0.05, 0, 140,
+        [[80, 220, 160], [40, 180, 200]], 0.30,
+      ),
+      makeOrb(
+        window.innerWidth * 0.1, window.innerHeight * 0.1,
+        300, 0.075, -200, -160,
+        [[255, 190, 120], [240, 140, 90]], 0.22,
+      ),
+    ];
+
+    const resize = () => {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const onMove = (e) => { mouse.x = e.clientX; mouse.y = e.clientY; };
+    window.addEventListener("mousemove", onMove);
+
+    const drawOrb = (orb) => {
+      const grad = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.radius);
+      const [c1, c2] = orb.color;
+      grad.addColorStop(0,   `rgba(${c1[0]},${c1[1]},${c1[2]},${orb.opacity})`);
+      grad.addColorStop(0.45,`rgba(${c2[0]},${c2[1]},${c2[2]},${orb.opacity * 0.55})`);
+      grad.addColorStop(1,   `rgba(${c2[0]},${c2[1]},${c2[2]},0)`);
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(orb.x, orb.y, orb.radius, 0, Math.PI * 2);
+      ctx.fill();
     };
 
     const loop = () => {
-      if (el) el.style.transform = `translate(${cur.current.x}px, ${cur.current.y}px)`;
-      raf.current = requestAnimationFrame(loop);
-    };
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    window.addEventListener("mousemove", onMove);
-    raf.current = requestAnimationFrame(loop);
-    const reset = () => { cur.current = { x: 0, y: 0 }; };
-    el.addEventListener("mouseleave", reset);
+      orbs.forEach((orb) => {
+        // Raw target: mouse position + per-orb offset
+        const rawTx = mouse.x + orb.offsetX;
+        const rawTy = mouse.y + orb.offsetY;
+        // Clamp displacement from resting home position
+        orb.tx = orb.homeX + clamp(rawTx - orb.homeX, -ORBS_MAX_DRIFT, ORBS_MAX_DRIFT);
+        orb.ty = orb.homeY + clamp(rawTy - orb.homeY, -ORBS_MAX_DRIFT, ORBS_MAX_DRIFT);
+        orb.x += (orb.tx - orb.x) * orb.lag;
+        orb.y += (orb.ty - orb.y) * orb.lag;
+        drawOrb(orb);
+      });
+
+      animId = requestAnimationFrame(loop);
+    };
+    animId = requestAnimationFrame(loop);
 
     return () => {
+      cancelAnimationFrame(animId);
+      window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMove);
-      el.removeEventListener("mouseleave", reset);
-      if (raf.current) cancelAnimationFrame(raf.current);
     };
-  }, [strength, radius]);
+  }, []);
 
-  return ref;
+  return canvasRef;
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Blob parallax hook
+// Blob parallax hook (CSS blobs layer — sits above canvas for extra depth)
 // ─────────────────────────────────────────────────────────────────────────────
 function useBlobParallax(factor = 0.018) {
   const blob1Ref = useRef(null);
   const blob2Ref = useRef(null);
+  const blob3Ref = useRef(null);
   const pos1  = useRef({ x: 0, y: 0 });
   const pos2  = useRef({ x: 0, y: 0 });
+  const pos3  = useRef({ x: 0, y: 0 });
   const raf   = useRef(null);
   const mouse = useRef({ x: 0, y: 0 });
 
@@ -118,14 +175,27 @@ function useBlobParallax(factor = 0.018) {
     window.addEventListener("mousemove", onMove);
 
     const loop = () => {
-      pos1.current.x += (mouse.current.x * factor - pos1.current.x) * 0.05;
-      pos1.current.y += (mouse.current.y * factor - pos1.current.y) * 0.05;
-      pos2.current.x += (-mouse.current.x * factor * 0.7 - pos2.current.x) * 0.04;
-      pos2.current.y += (-mouse.current.y * factor * 0.7 - pos2.current.y) * 0.04;
+      const targetX1 = clamp(mouse.current.x * factor,        -BLOB_MAX_DRIFT, BLOB_MAX_DRIFT);
+      const targetY1 = clamp(mouse.current.y * factor,        -BLOB_MAX_DRIFT, BLOB_MAX_DRIFT);
+      const targetX2 = clamp(-mouse.current.x * factor * 0.7, -BLOB_MAX_DRIFT, BLOB_MAX_DRIFT);
+      const targetY2 = clamp(-mouse.current.y * factor * 0.7, -BLOB_MAX_DRIFT, BLOB_MAX_DRIFT);
+      const targetX3 = clamp(mouse.current.x * factor * 0.5,  -BLOB_MAX_DRIFT, BLOB_MAX_DRIFT);
+      const targetY3 = clamp(-mouse.current.y * factor * 0.5, -BLOB_MAX_DRIFT, BLOB_MAX_DRIFT);
+
+      pos1.current.x += (targetX1 - pos1.current.x) * 0.05;
+      pos1.current.y += (targetY1 - pos1.current.y) * 0.05;
+      pos2.current.x += (targetX2 - pos2.current.x) * 0.04;
+      pos2.current.y += (targetY2 - pos2.current.y) * 0.04;
+      pos3.current.x += (targetX3 - pos3.current.x) * 0.03;
+      pos3.current.y += (targetY3 - pos3.current.y) * 0.035;
+
       if (blob1Ref.current)
         blob1Ref.current.style.transform = `translate(${pos1.current.x}px, ${pos1.current.y}px)`;
       if (blob2Ref.current)
         blob2Ref.current.style.transform = `translate(${pos2.current.x}px, ${pos2.current.y}px)`;
+      if (blob3Ref.current)
+        blob3Ref.current.style.transform = `translate(${pos3.current.x}px, ${pos3.current.y}px)`;
+
       raf.current = requestAnimationFrame(loop);
     };
     raf.current = requestAnimationFrame(loop);
@@ -136,67 +206,37 @@ function useBlobParallax(factor = 0.018) {
     };
   }, [factor]);
 
-  return { blob1Ref, blob2Ref };
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Avatar parallax hook
-// ─────────────────────────────────────────────────────────────────────────────
-function useAvatarParallax(factor = 0.025) {
-  const ref   = useRef(null);
-  const pos   = useRef({ x: 0, y: 0 });
-  const mouse = useRef({ x: 0, y: 0 });
-  const raf   = useRef(null);
-
-  useEffect(() => {
-    const onMove = (e) => {
-      const cx = window.innerWidth  / 2;
-      const cy = window.innerHeight / 2;
-      mouse.current = { x: e.clientX - cx, y: e.clientY - cy };
-    };
-    window.addEventListener("mousemove", onMove);
-
-    const loop = () => {
-      pos.current.x += (mouse.current.x * factor - pos.current.x) * 0.06;
-      pos.current.y += (mouse.current.y * factor - pos.current.y) * 0.06;
-      if (ref.current)
-        ref.current.style.transform = `translate(${pos.current.x}px, ${pos.current.y}px)`;
-      raf.current = requestAnimationFrame(loop);
-    };
-    raf.current = requestAnimationFrame(loop);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      if (raf.current) cancelAnimationFrame(raf.current);
-    };
-  }, [factor]);
-
-  return ref;
+  return { blob1Ref, blob2Ref, blob3Ref };
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Main component
 // ─────────────────────────────────────────────────────────────────────────────
 const Home = () => {
-  const { dotRef, ringRef }    = useCursor();
-  const { blob1Ref, blob2Ref } = useBlobParallax(0.022);
-  const avatarRef   = useAvatarParallax(0.028);
-  // const resumeRef   = useMagnetic({ strength: 0.45, radius: 110 });
-  // const mediaKitRef = useMagnetic({ strength: 0.45, radius: 110 });
+  const { dotRef, ringRef }          = useCursor();
+  const canvasRef                    = useAuroraCanvas();
+  const { blob1Ref, blob2Ref, blob3Ref } = useBlobParallax(0.022);
 
   return (
     <>
       <div ref={dotRef}  className="cursor-dot"  aria-hidden="true" />
       <div ref={ringRef} className="cursor-ring" aria-hidden="true" />
 
+      {/* ── Aurora canvas layer ── */}
+      <canvas ref={canvasRef} className="aurora-canvas" aria-hidden="true" />
+
+      {/* ── Grain overlay ── */}
+      <div className="grain-overlay" aria-hidden="true" />
+
       <main className="home page-wrapper">
+        {/* CSS blobs sit above canvas for an extra parallax depth layer */}
         <div ref={blob1Ref} className="blob blob-1" aria-hidden="true" />
         <div ref={blob2Ref} className="blob blob-2" aria-hidden="true" />
+        <div ref={blob3Ref} className="blob blob-3" aria-hidden="true" />
 
         <div className="home-inner stagger">
           {/* ── Text side ── */}
           <div className="home-text">
-            {/* <p className="home-tagline">Seattle · San Francisco · Sydney</p> */}
             <h1 className="home-heading">
               Hello, I'm Aolin!
             </h1>
@@ -224,20 +264,6 @@ const Home = () => {
               </a>
             </div>
           </div>
-
-          {/* ── Visual side ── */}
-          <div className="home-visual">
-            <div ref={avatarRef} className="avatar-wrapper">
-              <div className="avatar-ring">
-                <img src="memoji.jpg" alt="Aolin Xu" className="avatar-img" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="home-scroll-hint" aria-hidden="true">
-          <span>scroll</span>
-          <div className="scroll-line" />
         </div>
       </main>
     </>
