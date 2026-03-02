@@ -112,8 +112,21 @@
   padding: 120px 60px 100px;
   position: relative;
   overflow: hidden;
-  /* Ensure the page bg is transparent so the canvas shows through */
   background: transparent;
+}
+
+/* Soft fade at the bottom so the aurora dissolves into the page background
+   instead of cutting off with a hard line */
+.home::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 160px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+  pointer-events: none;
+  z-index: 4; /* above blobs + content, below cursor */
 }
 
 /* ── CSS blob layer (adds extra parallax depth on top of canvas orbs) ──── */
